@@ -1,12 +1,14 @@
 # Snake AI - Q-Learning Implementation
 
-This project demonstrates a Snake game with an AI, trained with Q-learning. The AI learns to play the game during training. Recieves rewards for eating food, and penalties for collisions.
+This project demonstrates a Snake game with an AI, trained with Q-learning. The AI learns to play the game during training. Receives rewards for eating food, and penalties for collisions or inefficient moves.
 
 ## Features
 
 - **AI Agent**: Trained using Q-learning to play Snake game.
 - **Training Mode**: Trains the AI if no Q-table exists.
 - **Pygame**: Visualizes the game.
+- **Improved Reward System**: Rewards for getting closer to food and penalties for moving away or taking too long.
+- **Q-Table Persistence**: Saves and loads the Q-table to/from a file.
 
 ## Installation
 
@@ -41,7 +43,7 @@ This project demonstrates a Snake game with an AI, trained with Q-learning. The 
   - Current movement direction.
 
 - **Action Space**:
-  The ai can choose one of the three:
+  The AI can choose one of the three:
 
   - Continue moving straight.
   - Turn left.
@@ -49,9 +51,11 @@ This project demonstrates a Snake game with an AI, trained with Q-learning. The 
 
 - **Reward System**:
 
-  - +10 for eating food.
+  - +20 for eating food.
   - -100 for collisions.
-  - 0 for normal moves.
+  - +1 for moving closer to food.
+  - -1 for moving away from food.
+  - Additional penalties for taking too long to find food.
 
 - **Q-Table**:
   The Q-table is a dictionary where keys are states, and values are arrays representing the Q-values for each action. For example:
@@ -64,10 +68,10 @@ This project demonstrates a Snake game with an AI, trained with Q-learning. The 
 
 ### Training
 
-If the `q_table.npy` file does not exist, the AI will start training for n episodes. Training progress is displayed in the console.
+If the `improved_q_table.npy` file does not exist, the AI will start training for n episodes. Training progress is displayed in the console.
 
 - **Training Loop**:
-  The training loop iterates over episodes, where the ai plays the game, updates the Q-table using the Bellman equation, and adjusts its strategy based on exploration (epsilon-greedy policy).
+  The training loop iterates over episodes, where the AI plays the game, updates the Q-table using the Bellman equation, and adjusts its strategy based on exploration (epsilon-greedy policy).
 
   ```python
   for episode in range(num_episodes):
@@ -80,7 +84,7 @@ If the `q_table.npy` file does not exist, the AI will start training for n episo
   ```
 
 - **Bellman Equation**:
-  The Q-value updates like this :
+  The Q-value updates like this:
   ```python
   q_table[state][action] = q_table[state][action] + learning_rate * (
       reward + discount_factor * max(q_table[next_state]) - q_table[state][action]
@@ -102,9 +106,9 @@ The game environment is implemented using `pygame`. It provides:
   The environment checks for collisions with walls or the Snake's body.
 
 - **Reward Assignment**:
-  Rewards are given depending on the ai's actions, such as eating food or colliding.
+  Rewards are given depending on the AI's actions, such as eating food, moving closer to food, or colliding.
 
 ## Files
 
 - **`snake.py`**: Contains the implementation of the game and AI agent.
-- **`q_table.npy`**: Stores the Q-table for the trained AI. If not present, the AI will train itself.
+- **`improved_q_table.npy`**: Stores the Q-table for the trained AI. If not present, the AI will train itself.
